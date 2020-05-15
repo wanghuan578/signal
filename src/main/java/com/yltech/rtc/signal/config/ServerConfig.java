@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
-@Configuration
+//@Configuration
 public class ServerConfig {
 
     @Value("${socketio.host}")
@@ -29,6 +29,7 @@ public class ServerConfig {
         config.setWorkerThreads(100);
 
         InputStream key = getClass().getClassLoader().getResourceAsStream("3910169__keepfun.cn.pfx");
+
         //String keyStoreLocation = "3910169__keepfun.cn.pfx";
 //        InputStream key = null;
 //        try {
@@ -39,8 +40,8 @@ public class ServerConfig {
 //            return null;
 //        }
 
-        config.setKeyStore(key);
-        config.setKeyStorePassword("CFj17tUl");
+//        config.setKeyStore(key);
+//        config.setKeyStorePassword("CFj17tUl");
 
         SocketConfig socketConfig = new SocketConfig();
         socketConfig.setReuseAddress(true);
@@ -51,30 +52,7 @@ public class ServerConfig {
         //设置http交互最大内容长度
         config.setMaxHttpContentLength(1024 * 1024);
 
-        config.setAuthorizationListener(hd -> {
 
-            System.out.println(hd.getUrlParams());
-
-            String auth_token = hd.getSingleUrlParam("auth_token");
-
-            if (StringUtil.isNullOrEmpty(auth_token)) {
-                return false;
-            }
-
-//            UserEntity userEntity = userSerivice.findUserByToken(auth_token);
-//            //同一个账号登录多次登录 关闭之前的连接
-//            if (userEntity != null && SessionUtil.userId_socket_Map.containsKey(userEntity.getId())) {
-//                SocketIOClient socketIOClient = SessionUtil.userId_socket_Map.get(userEntity.getId());
-//                socketIOClient.sendEvent("otherLogin");
-//                return false;
-//            }
-//
-//            // 移动设备不能同时登录 (android ios) 待处理
-//
-//            //是否拦截 socket.io 连接
-//            return userEntity == null ? false : true;
-            return true;
-        });
 
         return new SocketIOServer(config);
     }

@@ -21,19 +21,19 @@ public class MessageEventHandler {
     private final static Integer ROOM_USER_LIMIT = 3;
 
 
-    private final SocketIOServer server;
+    private final SocketIOServer server = null;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SSS");
 
-    @Autowired
-    public MessageEventHandler(SocketIOServer server) {
-        this.server = server;
-    }
+    //@Autowired
+//    public MessageEventHandler(SocketIOServer server) {
+//        this.server = server;
+//    }
 
     @OnConnect
     public void connect(SocketIOClient client) {
         HandshakeData hd = client.getHandshakeData();
-
+        log.info("connect...");
 //        String auth_token = hd.getSingleUrlParam("auth_token");
 //        UserEntity userEntity = userSerivice.findUserByToken(auth_token);
 //        String userId = userEntity.getId();
@@ -114,6 +114,13 @@ public class MessageEventHandler {
         }
     }
 
+    @OnEvent(value = "client_info")
+    public void msg(SocketIOClient client, AckRequest ackRequest, String roomId, String data) {
+
+        log.info("msg: {}", data);
+
+
+    }
 
     public void sendMessageToAllClient(String userName) {
         Collection<SocketIOClient> clients = server.getAllClients();
