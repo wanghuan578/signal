@@ -42,6 +42,7 @@ public class SignalApplication {
 
 
     private static void init() throws FileNotFoundException {
+
         Configuration config = new Configuration();
 
         //InputStream key = this.getClass().getClassLoader().getResourceAsStream("3910169__keepfun.cn.pfx");
@@ -54,24 +55,24 @@ public class SignalApplication {
         //config.setHostname("localhost");
         config.setPort(443);
         SocketIOServer server = new SocketIOServer(config);
+
         server.addConnectListener(new ConnectListener() {
-            // 添加客户端连接监听器
             public void onConnect(SocketIOClient client) {
                 log.info("android connect ------------------------ ");
-                //client.sendEvent("connected", "hello");
+                client.sendEvent("connected", "hello notify");
             }
         });
 
-        //监听客户端事件，client_info为事件名称，-自定义事件
-        server.addEventListener("client_info", String.class, new DataListener<String>(){
-            public void onData(SocketIOClient client, String data, AckRequest ackRequest) throws ClassNotFoundException {
-                //客户端推送advert_info事件时，onData接受数据，这里是string类型的json数据，还可以为Byte[],object其他类型
-                String sa = client.getRemoteAddress().toString();
-                String clientIp = sa.substring(1,sa.indexOf(":"));//获取客户端连接的ip
-                Map params = client.getHandshakeData().getUrlParams();//获取客户端url参数
-                log.info(clientIp+"：客户端：************"+data);
-            }
-        });
+//        //监听客户端事件，client_info为事件名称，-自定义事件
+//        server.addEventListener("client_info", String.class, new DataListener<String>(){
+//            public void onData(SocketIOClient client, String data, AckRequest ackRequest) throws ClassNotFoundException {
+//                //客户端推送advert_info事件时，onData接受数据，这里是string类型的json数据，还可以为Byte[],object其他类型
+//                String sa = client.getRemoteAddress().toString();
+//                String clientIp = sa.substring(1,sa.indexOf(":"));//获取客户端连接的ip
+//                Map params = client.getHandshakeData().getUrlParams();//获取客户端url参数
+//                log.info(clientIp+"：客户端：************"+data);
+//            }
+//        });
 
         //监听客户端事件，client_info为事件名称，-自定义事件
         server.addEventListener("join", String.class, new DataListener<String>(){
@@ -80,6 +81,7 @@ public class SignalApplication {
                 log.info("------------- join room: {}", roomId);
 
                 client.joinRoom(roomId);
+
                 Collection<SocketIOClient> clients = server.getRoomOperations(roomId).getClients();
                 if (clients.size() < ROOM_USER_LIMIT) {
                     client.sendEvent("joined", roomId, "");
