@@ -51,7 +51,7 @@ public class SignalApplication {
         config.setKeyStore(key);
         config.setKeyStorePassword("CFj17tUl");
 
-        config.setHostname("localhost");
+        config.setHostname("signal.keepfun.cn");
         config.setPort(443);
         SocketIOServer server = new SocketIOServer(config);
         server.addConnectListener(new ConnectListener() {
