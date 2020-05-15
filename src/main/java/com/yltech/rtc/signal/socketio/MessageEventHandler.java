@@ -34,6 +34,7 @@ public class MessageEventHandler {
     public void connect(SocketIOClient client) {
         HandshakeData hd = client.getHandshakeData();
         log.info("connect...");
+        client.sendEvent("connected", "hello notify");
 //        String auth_token = hd.getSingleUrlParam("auth_token");
 //        UserEntity userEntity = userSerivice.findUserByToken(auth_token);
 //        String userId = userEntity.getId();
