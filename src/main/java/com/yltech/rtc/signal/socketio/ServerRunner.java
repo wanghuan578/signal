@@ -14,7 +14,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 
-//@Component
+@Component
 public class ServerRunner implements CommandLineRunner {
 
 

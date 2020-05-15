@@ -21,14 +21,14 @@ public class MessageEventHandler {
     private final static Integer ROOM_USER_LIMIT = 3;
 
 
-    private final SocketIOServer server = null;
+    private final SocketIOServer server;
 
     private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SSS");
 
-    //@Autowired
-//    public MessageEventHandler(SocketIOServer server) {
-//        this.server = server;
-//    }
+    @Autowired
+    public MessageEventHandler(SocketIOServer server) {
+        this.server = server;
+    }
 
     @OnConnect
     public void connect(SocketIOClient client) {
