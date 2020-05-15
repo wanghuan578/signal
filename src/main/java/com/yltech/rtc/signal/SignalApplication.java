@@ -45,7 +45,9 @@ public class SignalApplication {
         Configuration config = new Configuration();
 
         //InputStream key = this.getClass().getClassLoader().getResourceAsStream("3910169__keepfun.cn.pfx");
-        InputStream key = new FileInputStream(new File("D:\\证书\\tomcat\\3910169__keepfun.cn.pfx"));
+        //InputStream key = new FileInputStream(new File("D:\\证书\\tomcat\\3910169__keepfun.cn.pfx"));
+        InputStream key = new FileInputStream(new File("/home/git/signal/src/main/resources/3910169__keepfun.cn.pfx"));
+
         config.setKeyStore(key);
         config.setKeyStorePassword("CFj17tUl");
 
