@@ -51,8 +51,8 @@ public class SignalApplication {
         config.setKeyStore(key);
         config.setKeyStorePassword("CFj17tUl");
 
-        config.setHostname("localhost");
-        config.setPort(9999);
+        config.setHostname("47.103.38.151");
+        config.setPort(443);
         SocketIOServer server = new SocketIOServer(config);
         server.addConnectListener(new ConnectListener() {
             // 添加客户端连接监听器
