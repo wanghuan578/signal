@@ -25,7 +25,7 @@ import java.util.Map;
 @SpringBootApplication
 public class SignalApplication {
 
-    private final static Integer ROOM_USER_LIMIT = 3;
+
 
     public static void main(String[] args) {
         SpringApplication.run(SignalApplication.class, args);
