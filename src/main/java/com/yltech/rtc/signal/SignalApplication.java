@@ -57,8 +57,8 @@ public class SignalApplication {
         server.addConnectListener(new ConnectListener() {
             // 添加客户端连接监听器
             public void onConnect(SocketIOClient client) {
-                log.info("onConnect ------------------------ ");
-                client.sendEvent("connected", "hello");
+                log.info("android connect ------------------------ ");
+                //client.sendEvent("connected", "hello");
             }
         });
 
