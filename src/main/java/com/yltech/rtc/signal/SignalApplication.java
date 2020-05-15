@@ -4,6 +4,7 @@ import com.corundumstudio.socketio.Configuration;
 import com.corundumstudio.socketio.SocketConfig;
 import com.corundumstudio.socketio.SocketIOServer;
 import io.netty.util.internal.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.io.FileInputStream;
 import java.io.InputStream;
 
+@Slf4j
 @SpringBootApplication
 public class SignalApplication {
 
@@ -22,9 +24,9 @@ public class SignalApplication {
         SpringApplication.run(SignalApplication.class, args);
     }
 
-    @RequestMapping(path = {"/tls"})
+    @RequestMapping(path = {"/"})
     public String HelloSpring (){
-        System.out.println("hello spring boot");
+        log.info("tls -    ");
         return "spring boot tls";
     }
 
