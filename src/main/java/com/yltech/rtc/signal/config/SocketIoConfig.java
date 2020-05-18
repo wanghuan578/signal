@@ -15,26 +15,32 @@ import java.io.InputStream;
 @Configuration
 public class SocketIoConfig {
 
-    @Value("${socketio.port}")
+    @Value("${socket.io.port}")
     private Integer port;
+
+    @Value("${ssl.key-store-name}")
+    private String keyStoreName;
+
+    @Value("${ssl.key-store-password}")
+    private String keyStorePwd;
 
     @Bean
     public SocketIOServer socketIOServer() {
 
         com.corundumstudio.socketio.Configuration config = new com.corundumstudio.socketio.Configuration();
 
-        //InputStream key = this.getClass().getClassLoader().getResourceAsStream("3910169__keepfun.cn.pfx");
+        InputStream key = this.getClass().getClassLoader().getResourceAsStream(keyStoreName);
         //InputStream key = new FileInputStream(new File("D:\\证书\\tomcat\\3910169__keepfun.cn.pfx"));
-        InputStream key = null;
-        try {
-            key = new FileInputStream(new File("/var/maven/repos/lc/git/signal/src/main/resources/3910169__keepfun.cn.pfx"));
-            //key = new FileInputStream(new File("D:\\证书\\tomcat\\3910169__keepfun.cn.pfx"));
-        } catch (FileNotFoundException e) {
-            log.error(e.getLocalizedMessage(), e);
-        }
+//        InputStream key = null;
+//        try {
+//            key = new FileInputStream(new File("/var/maven/repos/lc/git/signal/src/main/resources/3910169__keepfun.cn.pfx"));
+//            //key = new FileInputStream(new File("D:\\证书\\tomcat\\3910169__keepfun.cn.pfx"));
+//        } catch (FileNotFoundException e) {
+//            log.error(e.getLocalizedMessage(), e);
+//        }
 
         config.setKeyStore(key);
-        config.setKeyStorePassword("CFj17tUl");
+        config.setKeyStorePassword(keyStorePwd);
 
         //config.setHostname("localhost");
         config.setPort(port);
