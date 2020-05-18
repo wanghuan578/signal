@@ -27,8 +27,8 @@ public class SocketIoConfig {
         //InputStream key = new FileInputStream(new File("D:\\证书\\tomcat\\3910169__keepfun.cn.pfx"));
         InputStream key = null;
         try {
-            //key = new FileInputStream(new File("/home/git/signal/src/main/resources/3910169__keepfun.cn.pfx"));
-            key = new FileInputStream(new File("D:\\证书\\tomcat\\3910169__keepfun.cn.pfx"));
+            key = new FileInputStream(new File("/var/maven/repos/lc/git/signal/src/main/resources/3910169__keepfun.cn.pfx"));
+            //key = new FileInputStream(new File("D:\\证书\\tomcat\\3910169__keepfun.cn.pfx"));
         } catch (FileNotFoundException e) {
             log.error(e.getLocalizedMessage(), e);
         }
