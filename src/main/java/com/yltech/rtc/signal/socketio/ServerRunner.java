@@ -37,6 +37,7 @@ public class ServerRunner implements CommandLineRunner {
             public void onConnect(SocketIOClient client) {
                 log.info("android connect ------------------------ ");
                 client.sendEvent("connected", "hello notify");
+                log.info("hello notify");
             }
         });
 
