@@ -4,19 +4,13 @@ import com.alibaba.fastjson.JSON;
 import com.corundumstudio.socketio.*;
 import com.corundumstudio.socketio.listener.ConnectListener;
 import com.corundumstudio.socketio.listener.DataListener;
-import com.corundumstudio.socketio.listener.DisconnectListener;
-import com.yltech.rtc.signal.pojo.ExchangeMessage;
-import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Component;
-
-import java.io.FileInputStream;
-import java.io.InputStream;
 import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Slf4j
 @Component
@@ -54,7 +48,7 @@ public class ServerRunner implements CommandLineRunner {
                     if (clients.size() > 1) {
                         for (SocketIOClient c : clients) {
                             if (c != client) {
-                                c.sendEvent("otherjoin", roomId);
+                                c.sendEvent("otherjoin", roomId, "");
                             }
                         }
                     }
@@ -86,31 +80,24 @@ public class ServerRunner implements CommandLineRunner {
             }
         });
 
-        server.addEventListener("message", ExchangeMessage.class, new DataListener<ExchangeMessage>(){
-            public void onData(SocketIOClient client, ExchangeMessage msg, AckRequest ackRequest) throws ClassNotFoundException {
+        server.addEventListener("message", Map.class, new DataListener<Map>(){
+            public void onData(SocketIOClient client, Map msg, AckRequest ackRequest) throws ClassNotFoundException {
 
-                log.info("exchange msg: {}", JSON.toJSONString(msg, true));
+                Map map = (LinkedHashMap) msg;
+                log.info("exchange msg: {}", JSON.toJSONString(map, true));
 
-                Collection<SocketIOClient> clients = server.getRoomOperations(msg.getRoomId()).getClients();
+                String roomId = (String) map.get("roomId");
+                String userId = (String) map.get("userId");
+                LinkedHashMap data = (LinkedHashMap) map.get("data");
+
+                Collection<SocketIOClient> clients = server.getRoomOperations(roomId).getClients();
                 for (SocketIOClient c : clients) {
                     if (c != client) {
-                        c.sendEvent("bye", msg.getRoomId(), msg.getUserId());
+                        c.sendEvent("message", roomId, data);
                     }
                 }
-
-                client.sendEvent("leaved", msg.getRoomId(), msg.getUserId());
             }
         });
-
-//        server.addDisconnectListener(new DisconnectListener(){
-//            public void onDisconnect(SocketIOClient client) {
-//                String sa = client.getRemoteAddress().toString();
-//                String clientIp = sa.substring(1,sa.indexOf(":"));//获取设备ip
-//                log.info(clientIp+"-------------------------"+"客户端已断开连接");
-//                //给客户端发送消息
-//                client.sendEvent("advert_info",clientIp+"客户端你好，我是服务端，期待下次和你见面");
-//            }
-//        });
 
         server.start();
     }

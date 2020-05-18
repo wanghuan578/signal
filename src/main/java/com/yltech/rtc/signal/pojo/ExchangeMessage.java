@@ -1,9 +1,15 @@
 package com.yltech.rtc.signal.pojo;
 
-import lombok.Data;
+import lombok.*;
+
+import java.io.Serializable;
 
 @Data
-public class ExchangeMessage {
+@ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class ExchangeMessage implements Serializable {
     private String userId;
     private String roomId;
     private Object data;
