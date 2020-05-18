@@ -35,30 +35,12 @@ public class MessageEventHandler {
         HandshakeData hd = client.getHandshakeData();
         log.info("connect...");
         client.sendEvent("connected", "hello notify");
-//        String auth_token = hd.getSingleUrlParam("auth_token");
-//        UserEntity userEntity = userSerivice.findUserByToken(auth_token);
-//        String userId = userEntity.getId();
-//        String userName = userEntity.getUsername();
-//        client.set("userId", userId);
-//        client.set("userName", userName);
-//        SessionUtil.userId_socket_Map.put(userId, client);
-//
-//        //上线关联所在的群组
-//        List<GroupEntity> entityList = groupSerivice.findMyGroupsByUserId(userId);
-//
-//        for (GroupEntity entity : entityList) {
-//            logger.info(userName + "自动关联了群 " + entity.getGroupname() + "   " + sdf.format(new Date()));
-//            client.joinRoom(entity.getId());
-//        }
-//
-//        logger.info(userName + "---》上 === 线了  " + client.getSessionId() + "   " + sdf.format(new Date()));
     }
 
-
-    @OnDisconnect
-    public void disconnect(SocketIOClient client) {
-        Session.user_socket_Map.remove(client.get("userId"));
-    }
+//    @OnDisconnect
+//    public void disconnect(SocketIOClient client) {
+//        Session.user_socket_Map.remove(client.get("userId"));
+//    }
 
     @OnEvent(value = "join")
     public void join(SocketIOClient client, AckRequest ackRequest, String roomId)  {

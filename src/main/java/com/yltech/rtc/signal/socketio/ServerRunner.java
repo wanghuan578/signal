@@ -35,27 +35,30 @@ public class ServerRunner implements CommandLineRunner {
             }
         });
 
-        server.addEventListener("join", String.class, new DataListener<String>(){
-            public void onData(SocketIOClient client, String roomId, AckRequest ackRequest) throws ClassNotFoundException {
+        server.addEventListener("join", Map.class, new DataListener<Map>(){
+            public void onData(SocketIOClient client, Map map, AckRequest ackRequest) throws ClassNotFoundException {
 
-                log.info("------------- join room: {}", roomId);
+                String roomId = (String) map.get("roomId");
+                String userId = (String) map.get("userId");
+
+                log.info("user: [{}], join room: [{}]", userId, roomId);
 
                 client.joinRoom(roomId);
 
                 Collection<SocketIOClient> clients = server.getRoomOperations(roomId).getClients();
                 if (clients.size() < ROOM_USER_LIMIT) {
-                    client.sendEvent("joined", roomId, "");
+                    client.sendEvent("joined", roomId, userId);
                     if (clients.size() > 1) {
                         for (SocketIOClient c : clients) {
                             if (c != client) {
-                                c.sendEvent("otherjoin", roomId, "");
+                                c.sendEvent("otherjoin", roomId, userId);
                             }
                         }
                     }
                 }
                 else {
                     client.leaveRoom(roomId);
-                    client.sendEvent("full", roomId, "");
+                    client.sendEvent("full", roomId, userId);
                 }
 
                 if (ackRequest.isAckRequested()) {
@@ -64,23 +67,27 @@ public class ServerRunner implements CommandLineRunner {
             }
         });
 
-        server.addEventListener("leave", String.class, new DataListener<String>(){
-            public void onData(SocketIOClient client, String roomId, AckRequest ackRequest) throws ClassNotFoundException {
+        server.addEventListener("leave", Map.class, new DataListener<Map>(){
+            public void onData(SocketIOClient client, Map map, AckRequest ackRequest) throws ClassNotFoundException {
+
+                String roomId = (String) map.get("roomId");
+                String userId = (String) map.get("userId");
 
                 log.info("leave room: {}", roomId);
 
                 Collection<SocketIOClient> clients = server.getRoomOperations(roomId).getClients();
                 for (SocketIOClient c : clients) {
                     if (c != client) {
-                        c.sendEvent("bye", roomId, "");
+                        c.sendEvent("bye", roomId, userId);
                     }
                 }
 
-                client.sendEvent("leaved", roomId, "");
+                client.sendEvent("leaved", roomId, userId);
             }
         });
 
         server.addEventListener("message", Map.class, new DataListener<Map>(){
+
             public void onData(SocketIOClient client, Map msg, AckRequest ackRequest) throws ClassNotFoundException {
 
                 Map map = (LinkedHashMap) msg;
@@ -93,7 +100,7 @@ public class ServerRunner implements CommandLineRunner {
                 Collection<SocketIOClient> clients = server.getRoomOperations(roomId).getClients();
                 for (SocketIOClient c : clients) {
                     if (c != client) {
-                        c.sendEvent("message", roomId, data);
+                        c.sendEvent("message", roomId, userId, data);
                     }
                 }
             }
