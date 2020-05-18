@@ -13,10 +13,4 @@ public class SignalApplication {
     public static void main(String[] args) {
         SpringApplication.run(SignalApplication.class, args);
     }
-
-    @RequestMapping(path = {"/"})
-    public String HelloSpring (){
-        //log.info("tls -    ");
-        return "spring boot tls";
-    }
 }
