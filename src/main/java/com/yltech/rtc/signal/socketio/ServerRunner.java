@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
@@ -19,11 +20,12 @@ public class ServerRunner implements CommandLineRunner {
 
     private final static Integer ROOM_USER_LIMIT = 3;
     private final SocketIOServer server;
-    private ReentrantLock lock;
+    private Lock lock;
 
     @Autowired
     public ServerRunner(SocketIOServer server) {
         this.server = server;
+        lock = new ReentrantLock();
     }
 
     @Override
