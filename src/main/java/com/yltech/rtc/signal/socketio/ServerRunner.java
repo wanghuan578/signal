@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j
 @Component
@@ -18,6 +19,7 @@ public class ServerRunner implements CommandLineRunner {
 
     private final static Integer ROOM_USER_LIMIT = 3;
     private final SocketIOServer server;
+    private ReentrantLock lock;
 
     @Autowired
     public ServerRunner(SocketIOServer server) {
@@ -38,31 +40,36 @@ public class ServerRunner implements CommandLineRunner {
         server.addEventListener("join", Map.class, new DataListener<Map>(){
             public void onData(SocketIOClient client, Map map, AckRequest ackRequest) throws ClassNotFoundException {
 
-                String roomId = (String) map.get("roomId");
-                String userId = (String) map.get("userId");
+                try {
+                    lock.lock();
 
-                log.info("user: [{}], join room: [{}]", userId, roomId);
+                    String roomId = (String) map.get("roomId");
+                    String userId = (String) map.get("userId");
 
-                client.joinRoom(roomId);
+                    log.info("user: [{}], join room: [{}]", userId, roomId);
 
-                Collection<SocketIOClient> clients = server.getRoomOperations(roomId).getClients();
-                if (clients.size() < ROOM_USER_LIMIT) {
-                    client.sendEvent("joined", roomId, userId);
-                    if (clients.size() > 1) {
-                        for (SocketIOClient c : clients) {
-                            if (c != client) {
-                                c.sendEvent("otherjoin", roomId, userId);
+                    client.joinRoom(roomId);
+
+                    Collection<SocketIOClient> clients = server.getRoomOperations(roomId).getClients();
+                    if (clients.size() < ROOM_USER_LIMIT) {
+                        client.sendEvent("joined", roomId, userId);
+                        if (clients.size() > 1) {
+                            for (SocketIOClient c : clients) {
+                                if (c != client) {
+                                    c.sendEvent("otherjoin", roomId, userId);
+                                }
                             }
                         }
+                    } else {
+                        client.leaveRoom(roomId);
+                        client.sendEvent("full", roomId, userId);
                     }
-                }
-                else {
-                    client.leaveRoom(roomId);
-                    client.sendEvent("full", roomId, userId);
-                }
 
-                if (ackRequest.isAckRequested()) {
-                    ackRequest.sendAckData("OK");
+                    if (ackRequest.isAckRequested()) {
+                        ackRequest.sendAckData("OK");
+                    }
+                } finally {
+                    lock.unlock();
                 }
             }
         });
