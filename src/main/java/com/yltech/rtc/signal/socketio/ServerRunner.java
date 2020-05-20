@@ -47,6 +47,7 @@ public class ServerRunner implements CommandLineRunner {
 
                     String roomId = (String) map.get("roomId");
                     String userId = (String) map.get("userId");
+                    String nickName = (String) map.get("nickName");
 
                     log.info("user: [{}], join room: [{}]", userId, roomId);
 
@@ -58,7 +59,7 @@ public class ServerRunner implements CommandLineRunner {
                         if (clients.size() > 1) {
                             for (SocketIOClient c : clients) {
                                 if (c != client) {
-                                    c.sendEvent("otherjoin", roomId, userId);
+                                    c.sendEvent("otherjoin", roomId, userId, nickName);
                                 }
                             }
                         }
@@ -104,13 +105,14 @@ public class ServerRunner implements CommandLineRunner {
 
                 String roomId = (String) map.get("roomId");
                 String srcUserId = (String) map.get("srcUserId");
+                String srcNickName = (String) map.get("srcNickName");
                 String destUserId = (String) map.get("destUserId");
                 LinkedHashMap data = (LinkedHashMap) map.get("data");
 
                 Collection<SocketIOClient> clients = server.getRoomOperations(roomId).getClients();
                 for (SocketIOClient c : clients) {
                     if (c != client) {
-                        c.sendEvent("message", roomId, srcUserId, destUserId, data);
+                        c.sendEvent("message", roomId, srcUserId, srcNickName, destUserId, data);
                     }
                 }
             }
