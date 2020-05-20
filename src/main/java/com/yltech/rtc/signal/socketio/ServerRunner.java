@@ -18,7 +18,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @Component
 public class ServerRunner implements CommandLineRunner {
 
-    private final static Integer ROOM_USER_LIMIT = 3;
+    private final static Integer ROOM_USER_LIMIT = 12;
     private final SocketIOServer server;
     private Lock lock;
 
