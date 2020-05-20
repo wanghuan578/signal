@@ -110,7 +110,7 @@ public class ServerRunner implements CommandLineRunner {
                 Collection<SocketIOClient> clients = server.getRoomOperations(roomId).getClients();
                 for (SocketIOClient c : clients) {
                     if (c != client) {
-                        c.sendEvent("message", roomId, userId, data);
+                        c.sendEvent("message", roomId, srcUserId, destUserId, data);
                     }
                 }
             }
