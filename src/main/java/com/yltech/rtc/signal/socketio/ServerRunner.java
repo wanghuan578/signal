@@ -109,13 +109,15 @@ public class ServerRunner implements CommandLineRunner {
                 String srcUserId = (String) map.get("srcUserId");
                 if (StringUtils.isEmpty(srcUserId)) {
                     log.error("srcUserId 为空");
-                    throw new Exception("srcUserId 为空");
+                    return;
+                    //throw new Exception("srcUserId 为空");
                 }
                 String srcNickName = (String) map.get("srcNickName");
                 String destUserId = (String) map.get("destUserId");
                 if (StringUtils.isEmpty(destUserId)) {
                     log.error("destUserId 为空");
-                    throw new Exception("destUserId 为空");
+                    //throw new Exception("destUserId 为空");
+                    return;
                 }
                 LinkedHashMap data = (LinkedHashMap) map.get("data");
 
