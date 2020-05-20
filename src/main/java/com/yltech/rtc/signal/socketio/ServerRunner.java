@@ -82,7 +82,7 @@ public class ServerRunner implements CommandLineRunner {
                 String roomId = (String) map.get("roomId");
                 String userId = (String) map.get("userId");
 
-                log.info("leave room: {}", roomId);
+                log.info("leave room: [{}], userId: [{}]", roomId, userId);
 
                 Collection<SocketIOClient> clients = server.getRoomOperations(roomId).getClients();
                 for (SocketIOClient c : clients) {
