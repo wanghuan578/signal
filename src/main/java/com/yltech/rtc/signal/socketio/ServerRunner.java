@@ -103,7 +103,8 @@ public class ServerRunner implements CommandLineRunner {
                 log.info("exchange msg: {}", JSON.toJSONString(map, true));
 
                 String roomId = (String) map.get("roomId");
-                String userId = (String) map.get("userId");
+                String srcUserId = (String) map.get("srcUserId");
+                String destUserId = (String) map.get("destUserId");
                 LinkedHashMap data = (LinkedHashMap) map.get("data");
 
                 Collection<SocketIOClient> clients = server.getRoomOperations(roomId).getClients();
