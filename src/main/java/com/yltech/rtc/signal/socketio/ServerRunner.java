@@ -8,6 +8,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
+
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -98,15 +100,23 @@ public class ServerRunner implements CommandLineRunner {
 
         server.addEventListener("message", Map.class, new DataListener<Map>(){
 
-            public void onData(SocketIOClient client, Map msg, AckRequest ackRequest) throws ClassNotFoundException {
+            public void onData(SocketIOClient client, Map msg, AckRequest ackRequest) throws Exception {
 
                 Map map = (LinkedHashMap) msg;
                 log.info("exchange msg: {}", JSON.toJSONString(map, true));
 
                 String roomId = (String) map.get("roomId");
                 String srcUserId = (String) map.get("srcUserId");
+                if (StringUtils.isEmpty(srcUserId)) {
+                    log.error("srcUserId 为空");
+                    throw new Exception("srcUserId 为空");
+                }
                 String srcNickName = (String) map.get("srcNickName");
                 String destUserId = (String) map.get("destUserId");
+                if (StringUtils.isEmpty(destUserId)) {
+                    log.error("destUserId 为空");
+                    throw new Exception("destUserId 为空");
+                }
                 LinkedHashMap data = (LinkedHashMap) map.get("data");
 
                 Collection<SocketIOClient> clients = server.getRoomOperations(roomId).getClients();
